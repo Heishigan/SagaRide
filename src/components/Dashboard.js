@@ -2,8 +2,10 @@
 import React, { useState } from "react";
 import Navbar from "./Navbar";
 import GoogleMaps from "./GoogleMaps";
-import { db } from "../firebase"; // Import db
-import { collection, addDoc } from "firebase/firestore"; // Import Firestore functions
+import { db } from "../firebase";
+import { collection, addDoc, doc, getDoc } from "firebase/firestore";
+import QRScanner from "./QRScanner";
+import AchievementModal from "./AchievementModal"; // Import the modal
 
 const Dashboard = () => {
   const [isRiding, setIsRiding] = useState(false);
@@ -11,6 +13,10 @@ const Dashboard = () => {
   const [distance, setDistance] = useState(0);
   const [startCoords, setStartCoords] = useState(null);
   const [endCoords, setEndCoords] = useState(null);
+  const [showScanner, setShowScanner] = useState(false);
+  const [story, setStory] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
+  const [achievementLocation, setAchievementLocation] = useState(""); // Achievement location
 
   const handleStartRide = () => {
     if (navigator.geolocation) {
@@ -61,8 +67,8 @@ const Dashboard = () => {
   };
 
   const calculateDistance = async (start, end) => {
-    const apiKey = "AIzaSyAzPeW75Q2buC8SGJlmEeLw10FZdsW59wQ"; // Replace with your API key
-    const url = `https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&origins=${start.lat},${start.lng}&destinations=${end.lat},${end.lng}&key=${apiKey}`;
+    const apiKey = "YOUR_GOOGLE_MAPS_API_KEY"; // Replace with your API key
+    const url = `/api/maps/api/distancematrix/json?units=metric&origins=${start.lat},${start.lng}&destinations=${end.lat},${end.lng}&key=${apiKey}`;
 
     try {
       const response = await fetch(url);
@@ -98,6 +104,36 @@ const Dashboard = () => {
     } catch (error) {
       console.error("Error saving ride data:", error);
     }
+    
+  };
+
+  const handleScan = async (data) => {
+    console.log("Scanned QR code:", data);
+
+    // Fetch story from Firestore
+    const storyRef = doc(db, "stories", data); // Use QR code value as document ID
+    const storyDoc = await getDoc(storyRef);
+    
+
+    if (storyDoc.exists()) {
+      const storyData = storyDoc.data();
+
+      // Show achievement modal
+      setAchievementLocation(storyData.location);
+      setIsModalOpen(true);
+      console.log("Opening audio link:", storyData.audioURL);
+      if (storyData.audioURL) {
+        window.open(storyData.audioURL, "_blank");
+      }
+
+      // Open audio link in a new tab (if available)
+      if (storyData.audioURL) {
+        window.open(storyData.audioURL, "_blank");
+      }
+    } else {
+      console.error("Story not found");
+    }
+    
   };
 
   return (
@@ -114,14 +150,39 @@ const Dashboard = () => {
             Start Ride
           </button>
         ) : (
-          <button
-            onClick={handleEndRide}
-            className="bg-red-500 text-white px-4 py-2 rounded"
-          >
-            End Ride
-          </button>
+          <div>
+            <button
+              onClick={handleEndRide}
+              className="bg-red-500 text-white px-4 py-2 rounded"
+            >
+              End Ride
+            </button>
+            <button
+              onClick={() => setShowScanner(true)}
+              className="bg-blue-500 text-white px-4 py-2 rounded mt-2"
+            >
+              Scan Story Stone
+            </button>
+          </div>
         )}
         {distance > 0 && <p>Distance: {distance.toFixed(2)} km</p>}
+        {showScanner && (
+          <QRScanner
+            onScan={handleScan}
+            onClose={() => setShowScanner(false)} // Close the scanner
+          />
+        )}
+        {story && (
+          <div className="mt-4">
+            <h2 className="text-xl font-bold">{story.title}</h2>
+            <p>{story.content}</p>
+          </div>
+        )}
+        <AchievementModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          location={achievementLocation}
+        />
         <GoogleMaps />
       </div>
     </div>
