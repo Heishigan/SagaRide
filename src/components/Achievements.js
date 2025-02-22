@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { db, auth } from "../firebase";
 import { collection, query, where, getDocs } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import Navbar from "./Navbar";
 
 const Achievements = () => {
@@ -9,6 +10,7 @@ const Achievements = () => {
   const [totalCarbonSaved, setTotalCarbonSaved] = useState(0);
   const [totalCaloriesBurnt, setTotalCaloriesBurnt] = useState(0);
   const [discoveredStories, setDiscoveredStories] = useState([]);
+  const [weatherAchievements, setWeatherAchievements] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -18,6 +20,9 @@ const Achievements = () => {
         const ridesRef = collection(db, "rides");
         const ridesQuery = query(ridesRef, where("userId", "==", user.uid));
         const ridesSnapshot = await getDocs(ridesQuery);
+        const userRef = doc(db, "users", user.uid);
+        const userDoc = await getDoc(userRef);
+        setWeatherAchievements(userDoc.data()?.weatherAchievements || []);
 
         let distance = 0;
         ridesSnapshot.forEach((doc) => {
@@ -102,6 +107,16 @@ const Achievements = () => {
             />
           </div>
         </div>
+         {/* Weather-Based Achievements */}
+         <div className="mb-6">
+          <h2 className="text-xl font-semibold mb-2">Weather Achievements</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <AchievementCard
+              title="Frost Knight"
+              completed={weatherAchievements.includes("Frost Knight")}
+            />
+          </div>
+        </div>
 
         {/* Story Stones Discovered */}
         <div className="mb-6">
@@ -131,5 +146,6 @@ const AchievementCard = ({ title, completed }) => {
     </div>
   );
 };
+
 
 export default Achievements;

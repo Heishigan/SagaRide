@@ -3,9 +3,11 @@ import React, { useState } from "react";
 import Navbar from "./Navbar";
 import GoogleMaps from "./GoogleMaps";
 import { db, auth } from "../firebase"; // Import auth
-import { collection, addDoc, doc, getDoc, updateDoc } from "firebase/firestore";
+import { collection, addDoc, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import QRScanner from "./QRScanner";
 import AchievementModal from "./AchievementModal"; // Import the modal
+import { getWeather } from "../utils/Weather"; // Import the weather utility
+
 
 const Dashboard = () => {
   const [isRiding, setIsRiding] = useState(false);
@@ -17,17 +19,41 @@ const Dashboard = () => {
   const [story, setStory] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
   const [achievementLocation, setAchievementLocation] = useState(""); // Achievement location
+  const [weather, setWeather] = useState(null); // Store weather data
 
-  const handleStartRide = () => {
+  
+
+  const handleStartRide = async () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
+        async (position) => {
           const { latitude, longitude } = position.coords;
           setStartCoords({ lat: latitude, lng: longitude });
           setIsRiding(true);
           setStartTime(new Date());
           console.log("Ride started at:", new Date());
           console.log("Start coordinates:", latitude, longitude);
+  
+          // Fetch weather data
+          const weatherData = await getWeather(latitude, longitude);
+          setWeather(weatherData);
+          console.log("Weather data:", weatherData);
+  
+          // Check for weather-based achievements
+          const user = auth.currentUser;
+          if (user) {
+            const userRef = doc(db, "users", user.uid);
+            const userDoc = await getDoc(userRef);
+  
+            if (weatherData?.main?.temp < 5) {
+              const achievements = userDoc.data()?.weatherAchievements || [];
+              if (!achievements.includes("Frost Knight")) {
+                achievements.push("Frost Knight");
+                await updateDoc(userRef, { weatherAchievements: achievements });
+                alert("Achievement Unlocked: Frost Knight 🥶");
+              }
+            }
+          }
         },
         (error) => {
           console.error("Error getting location:", error);
@@ -65,6 +91,7 @@ const Dashboard = () => {
       console.error("Geolocation is not supported by this browser.");
     }
   };
+
 
   const calculateDistance = async (start, end) => {
     const apiKey = "YOUR_GOOGLE_MAPS_API_KEY"; // Replace with your API key
@@ -142,7 +169,7 @@ const Dashboard = () => {
       }
     }
   };
-
+  
   return (
     <div>
       <Navbar />
