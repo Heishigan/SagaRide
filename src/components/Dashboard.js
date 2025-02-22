@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Navbar from "./Navbar";
 import GoogleMaps from "./GoogleMaps";
 import { db, auth } from "../firebase"; // Import auth
-import { collection, addDoc, doc, getDoc } from "firebase/firestore";
+import { collection, addDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 import QRScanner from "./QRScanner";
 import AchievementModal from "./AchievementModal"; // Import the modal
 
@@ -112,31 +112,35 @@ const Dashboard = () => {
 
   const handleScan = async (data) => {
     console.log("Scanned QR code:", data);
-
-    // Fetch story from Firestore
-    const storyRef = doc(db, "stories", data); // Use QR code value as document ID
-    const storyDoc = await getDoc(storyRef);
-    
-
-    if (storyDoc.exists()) {
-      const storyData = storyDoc.data();
-
-      // Show achievement modal
-      setAchievementLocation(storyData.location);
-      setIsModalOpen(true);
-      console.log("Opening audio link:", storyData.audioURL);
-      if (storyData.audioURL) {
-        window.open(storyData.audioURL, "_blank");
+  
+    const user = auth.currentUser;
+    if (user) {
+      const storyRef = doc(db, "stories", data);
+      const storyDoc = await getDoc(storyRef);
+  
+      if (storyDoc.exists()) {
+        const storyData = storyDoc.data();
+        setStory(storyData);
+  
+        // Update discoveredBy field
+        const discoveredBy = storyData.discoveredBy || [];
+        if (!discoveredBy.includes(user.uid)) {
+          discoveredBy.push(user.uid);
+          await updateDoc(storyRef, { discoveredBy });
+        }
+  
+        // Show achievement modal
+        setAchievementLocation(storyData.location);
+        setIsModalOpen(true);
+  
+        // Open audio link in a new tab (if available)
+        if (storyData.audioUrl) {
+          window.open(storyData.audioUrl, "_blank");
+        }
+      } else {
+        console.error("Story not found");
       }
-
-      // Open audio link in a new tab (if available)
-      if (storyData.audioURL) {
-        window.open(storyData.audioURL, "_blank");
-      }
-    } else {
-      console.error("Story not found");
     }
-    
   };
 
   return (

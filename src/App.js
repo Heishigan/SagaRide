@@ -3,7 +3,8 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
-import Stats from "./components/Stats"; // Import the Stats component
+import Stats from "./components/Stats";
+import Achievements from "./components/Achievements"; // Import the Achievements component
 
 function App() {
   return (
@@ -11,7 +12,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/stats" element={<Stats />} /> {/* Add the Stats route */}
+        <Route path="/stats" element={<Stats />} />
+        <Route path="/achievements" element={<Achievements />} /> {/* Add the Achievements route */}
       </Routes>
     </Router>
   );

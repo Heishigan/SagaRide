@@ -58,11 +58,17 @@ const Navbar = () => {
               Stats
             </button>
             <button
+              onClick={() => navigate("/achievements")}
+              className="block w-full px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white"
+            >
+              Achievements
+            </button>
+            <button
               onClick={handleLogout}
               className="block w-full px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white"
             >
               Logout
-            </button>
+            </button>            
           </div>
         )}
       </div>
