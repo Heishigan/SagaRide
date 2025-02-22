@@ -20,6 +20,8 @@ const Dashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
   const [achievementLocation, setAchievementLocation] = useState(""); // Achievement location
   const [weather, setWeather] = useState(null); // Store weather data
+  const [rideSummary, setRideSummary] = useState(null); // State for ride summary
+
   
 
   
@@ -83,6 +85,11 @@ const Dashboard = () => {
 
           // Save ride data to Firestore
           await saveRideData(startCoords, { lat: latitude, lng: longitude }, distance, duration);
+          setRideSummary({
+            distance: distance.toFixed(2),
+            carbonSaved: (distance * 0.2).toFixed(2), // 0.2 kg CO2 per km
+            caloriesBurnt: (distance * 40).toFixed(2), // 40 calories per km
+          });
         },
         (error) => {
           console.error("Error getting location:", error);
@@ -148,7 +155,6 @@ const Dashboard = () => {
   
       if (storyDoc.exists()) {
         const storyData = storyDoc.data();
-        setStory(storyData);
   
         // Update discoveredBy field
         const discoveredBy = storyData.discoveredBy || [];
@@ -162,8 +168,8 @@ const Dashboard = () => {
         setIsModalOpen(true);
   
         // Open audio link in a new tab (if available)
-        if (storyData.audioUrl) {
-          window.open(storyData.audioUrl, "_blank");
+        if (storyData.audioURL) {
+          window.open(storyData.audioURL, "_blank");
         }
       } else {
         console.error("Story not found");
@@ -199,7 +205,19 @@ const Dashboard = () => {
               Scan Story Stone
             </button><br></br>
           </div>
+          
+          
+          
         )}
+        {rideSummary && (
+          <div className="mt-6 p-6 bg-green-100 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold mb-4">🎉 Congratulations!</h2>
+            <p>You traveled <span className="font-bold">{rideSummary.distance} km</span>.</p>
+            <p>You saved <span className="font-bold">{rideSummary.carbonSaved} kg CO2</span>.</p>
+            <p>You burnt <span className="font-bold">{rideSummary.caloriesBurnt} kcal</span>.</p>
+          </div>
+        )}
+        
         {distance > 0 && <p>Distance: {distance.toFixed(2)} km</p>}
         {showScanner && (
           <QRScanner

@@ -60,3 +60,26 @@
 .shadow-lg {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
+/* Ride Summary Styles */
+.ride-summary {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background-color: #dcfce7; /* Green background */
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.ride-summary h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.ride-summary p {
+  font-size: 1.125rem;
+  margin-bottom: 0.5rem;
+}
+
+.ride-summary p span {
+  font-weight: 700;
+}
