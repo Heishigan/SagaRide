@@ -20,6 +20,7 @@ const Dashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
   const [achievementLocation, setAchievementLocation] = useState(""); // Achievement location
   const [weather, setWeather] = useState(null); // Store weather data
+  
 
   
 
@@ -174,29 +175,29 @@ const Dashboard = () => {
     <div>
       <Navbar />
       <div className="p-4">
-        <h1>Welcome to SagaRide Stockholm!</h1>
-        <p>You are now logged in. Ready to start your cycling adventure?</p>
+      <h1 className="text-2xl font-bold mb-4">Welcome to SagaRide Stockholm!</h1>
+         <p>You are now logged in. Ready to start your cycling adventure?</p>
         {!isRiding ? (
           <button
-            onClick={handleStartRide}
-            className="bg-green-500 text-white px-4 py-2 rounded"
-          >
-            Start Ride
-          </button>
+          onClick={handleStartRide}
+          className="ride-button start"
+        >
+          Start
+        </button>
         ) : (
           <div>
             <button
               onClick={handleEndRide}
-              className="bg-red-500 text-white px-4 py-2 rounded"
+              className="ride-button end"
             >
-              End Ride
-            </button>
+              End
+            </button><br></br>
             <button
               onClick={() => setShowScanner(true)}
-              className="bg-blue-500 text-white px-4 py-2 rounded mt-2"
+              className="scanstory-button"
             >
               Scan Story Stone
-            </button>
+            </button><br></br>
           </div>
         )}
         {distance > 0 && <p>Distance: {distance.toFixed(2)} km</p>}
