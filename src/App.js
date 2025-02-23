@@ -4,7 +4,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import Stats from "./components/Stats";
-import Achievements from "./components/Achievements"; // Import the Achievements component
+import Achievements from "./components/Achievements";
+import Leaderboard from "./components/Leaderboard"; // Import the Leaderboard component
 
 function App() {
   return (
@@ -13,7 +14,8 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/stats" element={<Stats />} />
-        <Route path="/achievements" element={<Achievements />} /> {/* Add the Achievements route */}
+        <Route path="/achievements" element={<Achievements />} />
+        <Route path="/leaderboard" element={<Leaderboard />} /> {/* Add the Leaderboard route */}
       </Routes>
     </Router>
   );

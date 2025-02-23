@@ -128,23 +128,30 @@ const Dashboard = () => {
       const user = auth.currentUser;
       if (user) {
         const rideData = {
-          userId: user.uid, // Add the user ID
+          userId: user.uid,
           startCoords: start,
           endCoords: end,
-          distance: distance.toFixed(2), // Distance in km
-          duration: duration.toFixed(2), // Duration in minutes
-          timestamp: new Date().toISOString(), // Current time in ISO format
+          distance: distance.toFixed(2),
+          duration: duration.toFixed(2),
+          timestamp: new Date().toISOString(),
         };
   
         // Add ride data to Firestore
         const docRef = await addDoc(collection(db, "rides"), rideData);
+  
+        // Update user's total distance
+        const userRef = doc(db, "users", user.uid);
+        const userDoc = await getDoc(userRef);
+        const currentDistance = userDoc.data()?.totalDistance || 0;
+        const newDistance = currentDistance + parseFloat(distance.toFixed(2));
+        await updateDoc(userRef, { totalDistance: newDistance });
+  
         console.log("Ride data saved with ID:", docRef.id);
       }
     } catch (error) {
       console.error("Error saving ride data:", error);
     }
   };
-
   const handleScan = async (data) => {
     console.log("Scanned QR code:", data);
   

@@ -1,22 +1,43 @@
 // src/components/Login.js
 import React from "react";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { auth, provider } from "../firebase";
+import { auth, provider, db } from "../firebase";
 import { useNavigate } from "react-router-dom";
+import { doc, setDoc, getDoc } from "firebase/firestore"; // Import Firestore functions
+
 
 const Login = () => {
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        const user = result.user;
-        console.log("Logged in user:", user);
-        navigate("/dashboard");
-      })
-      .catch((error) => {
-        console.error("Error logging in:", error);
-      });
+  const handleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      console.log("Logged in user:", user);
+
+      // Extract username from email
+      const email = user.email;
+      const username = email.split("@")[0];
+
+      // Check if the user already exists in Firestore
+      const userRef = doc(db, "users", user.uid);
+      const userDoc = await getDoc(userRef);
+
+      if (!userDoc.exists()) {
+        // Create a new user document if it doesn't exist
+        await setDoc(userRef, {
+          username: username,
+          email: email,
+          totalDistance: 0, // Initialize totalDistance
+          weatherAchievements: [], // Initialize weatherAchievements
+        });
+      }
+
+      // Navigate to the dashboard
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Error logging in:", error);
+    }
   };
 
   return (

@@ -19,7 +19,6 @@
     "react-dom": "^19.0.0",
     "react-modal": "^3.16.3",
     "react-qr-code": "^2.0.15",
-    "react-qr-reader": "^3.0.0-beta-1",
     "react-router-dom": "^7.2.0",
     "react-scripts": "5.0.1",
     "tailwind": "^4.0.0",
