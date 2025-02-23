@@ -20,6 +20,7 @@ const Dashboard = () => {
   const [weather, setWeather] = useState(null);
   const [rideSummary, setRideSummary] = useState(null);
   const [currentCoords, setCurrentCoords] = useState(null); // Track current location
+  const [isEndingRide, setIsEndingRide] = useState(false); // Prevent multiple clicks on "End Ride"
 
   // Watch the user's location while riding
   useEffect(() => {
@@ -44,6 +45,13 @@ const Dashboard = () => {
       }
     };
   }, [isRiding]);
+
+  // Save ride data to Firestore after distance is calculated
+  useEffect(() => {
+    if (distance > 0 && !isRiding) {
+      saveRideData(startCoords, endCoords, distance, (new Date() - startTime) / 1000 / 60);
+    }
+  }, [distance, isRiding]);
 
   const handleStartRide = async () => {
     if (navigator.geolocation) {
@@ -85,6 +93,9 @@ const Dashboard = () => {
   };
 
   const handleEndRide = async () => {
+    if (isEndingRide) return; // Prevent multiple clicks
+    setIsEndingRide(true);
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
@@ -97,27 +108,29 @@ const Dashboard = () => {
           // Calculate distance using Google Maps API
           await calculateDistance(startCoords, { lat: latitude, lng: longitude });
 
-          // Save ride data to Firestore
-          await saveRideData(startCoords, { lat: latitude, lng: longitude }, distance, duration);
+          // Set ride summary
           setRideSummary({
             distance: distance.toFixed(2),
             carbonSaved: (distance * 0.2).toFixed(2), // 0.2 kg CO2 per km
             caloriesBurnt: (distance * 40).toFixed(2), // 40 calories per km
           });
+
+          setIsEndingRide(false); // Re-enable the button
         },
         (error) => {
           console.error("Error getting location:", error);
+          setIsEndingRide(false); // Re-enable the button in case of error
         }
       );
     } else {
       console.error("Geolocation is not supported by this browser.");
+      setIsEndingRide(false); // Re-enable the button in case of error
     }
   };
 
-
   const calculateDistance = async (start, end) => {
     const apiKey = "YOUR_GOOGLE_MAPS_API_KEY"; // Replace with your API key
-    const url = `/api/maps/api/distancematrix/json?units=metric&origins=${start.lat},${start.lng}&destinations=${end.lat},${end.lng}&key=${apiKey}`;
+    const url = `https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&origins=${start.lat},${start.lng}&destinations=${end.lat},${end.lng}&key=${apiKey}`;
 
     try {
       const response = await fetch(url);
@@ -149,45 +162,46 @@ const Dashboard = () => {
           duration: duration.toFixed(2),
           timestamp: new Date().toISOString(),
         };
-  
+
         // Add ride data to Firestore
         const docRef = await addDoc(collection(db, "rides"), rideData);
-  
+
         // Update user's total distance
         const userRef = doc(db, "users", user.uid);
         const userDoc = await getDoc(userRef);
         const currentDistance = userDoc.data()?.totalDistance || 0;
         const newDistance = currentDistance + parseFloat(distance.toFixed(2));
         await updateDoc(userRef, { totalDistance: newDistance });
-  
+
         console.log("Ride data saved with ID:", docRef.id);
       }
     } catch (error) {
       console.error("Error saving ride data:", error);
     }
   };
+
   const handleScan = async (data) => {
     console.log("Scanned QR code:", data);
-  
+
     const user = auth.currentUser;
     if (user) {
       const storyRef = doc(db, "stories", data);
       const storyDoc = await getDoc(storyRef);
-  
+
       if (storyDoc.exists()) {
         const storyData = storyDoc.data();
-  
+
         // Update discoveredBy field
         const discoveredBy = storyData.discoveredBy || [];
         if (!discoveredBy.includes(user.uid)) {
           discoveredBy.push(user.uid);
           await updateDoc(storyRef, { discoveredBy });
         }
-  
+
         // Show achievement modal
         setAchievementLocation(storyData.location);
         setIsModalOpen(true);
-  
+
         // Open audio link in a new tab (if available)
         if (storyData.audioURL) {
           window.open(storyData.audioURL, "_blank");
@@ -197,7 +211,7 @@ const Dashboard = () => {
       }
     }
   };
-  
+
   return (
     <div>
       <Navbar />
@@ -210,8 +224,12 @@ const Dashboard = () => {
           </button>
         ) : (
           <div>
-            <button onClick={handleEndRide} className="ride-button end">
-              End
+            <button
+              onClick={handleEndRide}
+              className="ride-button end"
+              disabled={isEndingRide}
+            >
+              {isEndingRide ? "Ending Ride..." : "End Ride"}
             </button>
             <br />
             <button onClick={() => setShowScanner(true)} className="scanstory-button">
