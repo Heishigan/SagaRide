@@ -48,6 +48,18 @@ const Leaderboard = () => {
             </tbody>
           </table>
         </div>
+        <div className="mt-6 p-6 bg-blue-50 rounded-lg shadow-md text-center">
+          <h2 className="text-xl font-semibold text-blue-800 mb-2">
+            🎉 Exciting News! 🎉
+          </h2>
+          <p className="text-gray-700">
+            The top 3 riders on the leaderboard will receive a special coupon for their next purchase at{" "}
+            <span className="font-semibold text-blue-800">KuiperBelt Accessory</span>!
+          </p>
+          <p className="text-gray-600 mt-2">
+            Keep riding and stay tuned for more offers!
+          </p>
+        </div>
       </div>
     </div>
   );

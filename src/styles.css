@@ -433,3 +433,40 @@ tr:hover {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
 }
+/* Achievement Card Styles */
+.achievement-card {
+  display: flex;
+  align-items: center;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.achievement-card.completed {
+  background-color: #dcfce7; /* Green background for completed achievements */
+}
+
+.achievement-card:not(.completed) {
+  background-color: #f3f4f6; /* Gray background for incomplete achievements */
+}
+
+.achievement-card img {
+  width: 48px;
+  height: 48px;
+}
+
+.achievement-card h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.achievement-card p {
+  font-size: 0.875rem;
+  color: #4b5563; /* Gray text for subtext */
+}
+
+.achievement-card .status {
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
