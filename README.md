@@ -98,5 +98,5 @@ For inquiries, collaborations, or feedback, feel free to reach out:
 
 **Let's Make Stockholm the World's First Playable Cycling City! 🌍🚴‍♀️**
 
-## Demo Websit🌐
+## Demo Website 🌐
 [Try the website](https://saga-ride-stockholm.vercel.app/) <!-- Replace with a link to your demo video -->
