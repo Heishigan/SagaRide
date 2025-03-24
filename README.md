@@ -1,70 +1,102 @@
-# Getting Started with Create React App
+# SagaRide - Gamified Cycling App 🚴‍♂️✨
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+SagaRide is a gamified cycling app that transforms daily commutes into interactive adventures. By integrating ReactJS, Firebase, Google Maps API, and OpenWeather API, SagaRide turns cycling into a fun, rewarding, and sustainable experience. Whether you're a history buff, a fitness enthusiast, or an eco-warrior, SagaRide has something for you!
 
-In the project directory, you can run:
+## Features 🌟
 
-### `npm start`
+### 1. QR-Based Story Stones 📖
+Discover hidden tales of Stockholm while biking! Scan QR codes placed around the city to unlock historical stories and turn your commute into a treasure hunt.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 2. Weather-Tiered Achievements ☔❄️
+Turn rain or snow into bragging rights! Earn badges like **"Frost Knight"** or **"Rain Warrior"** for cycling in challenging weather conditions.
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 3. Leaderboards & Community Building 🏆
+Compete with friends to become Stockholm’s **"Eco Hero"**! Climb the leaderboards and build a community of like-minded cyclists.
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 4. CO2 & Stats Tracking 🌍
+Track your environmental impact in real-time. See how much CO2 you’ve saved and monitor your cycling stats to stay motivated.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## How It Works 🛠️
+1. **Use the web app**: [Available here](https://saga-ride-stockholm.vercel.app/) <!-- Replace with a link to your demo video -->
+2. **Start Your Adventure**: Choose a route and begin your journey.
+3. **Unlock Stories**: Scan QR codes to discover hidden tales.
+4. **Earn Rewards**: Complete challenges and earn badges.
+5. **Track Progress**: Monitor your stats and environmental impact.
 
-### `npm run eject`
+## Tech Stack 💻
+- **Frontend**: ReactJS, TailwindCSS
+- **Backend**: Firebase
+- **APIs**: Google Maps API, OpenWeather API
+- **Version Control**: Git
+- **Deployment**: Docker, CI/CD Pipelines
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Installation 📥
+To run SagaRide locally, follow these steps:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Clone the repository:
+```bash
+git clone https://github.com/Heishigan/SagaRide.git
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Navigate to the project directory:
+```bash
+cd SagaRide
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Install dependencies:
+```bash
+npm install
+```
 
-## Learn More
+### Start the development server:
+```bash
+npm start
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Contributing 🤝
+We welcome contributions! If you'd like to contribute to SagaRide, please follow these steps:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+1. **Fork the repository**.
+2. **Create a new branch**:
+   ```bash
+   git checkout -b feature/YourFeatureName
+   ```
+3. **Commit your changes**:
+   ```bash
+   git commit -m "Add your message here"
+   ```
+4. **Push to the branch**:
+   ```bash
+   git push origin feature/YourFeatureName
+   ```
+5. **Open a pull request**.
 
-### Code Splitting
+## Team 👥
+- **Heishigan Pathmaraj**: AI for Health Graduate Student | Machine Learning & Software Engineering
+- **Panisa Jermhansa**: MFA Design Ecologies Candidate | UI/UX Design
+- **Zhicong Wei**: Cybersecurity Student | Business Analyst
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## License 📜
+This project is licensed under the MIT License.
 
-### Analyzing the Bundle Size
+## Acknowledgments 🙏
+- Special thanks to **Deloitte** for hosting the hackathon.
+- Inspired by the idea of making cities more interactive and eco-friendly.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Contact 📧
+For inquiries, collaborations, or feedback, feel free to reach out:
 
-### Making a Progressive Web App
+- **Email**: [pheishi@live.com](mailto:pheishi@live.com)
+- **LinkedIn**: [Heishigan Pathmaraj](https://www.linkedin.com/in/heishigan/)
+- **Portfolio**: [Heishigan's Portfolio](https://heishigan.itch.io)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
-### Advanced Configuration
+**Let's Make Stockholm the World's First Playable Cycling City! 🌍🚴‍♀️**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Demo Websit🌐
+[Try the website](https://saga-ride-stockholm.vercel.app/) <!-- Replace with a link to your demo video -->
